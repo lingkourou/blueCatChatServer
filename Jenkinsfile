@@ -95,3 +95,4 @@ pipeline {
   // triggers { pollSCM('* * * * *') } // 或 GitHub webhook
   // post { always { archiveArtifacts artifacts: 'runserver.log', onlyIfSuccessful: false } }
 }
+
