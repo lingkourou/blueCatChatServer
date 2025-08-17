@@ -62,15 +62,15 @@ pipeline {
         fi
 
         # 兜底用端口把关（可能需要安装 psmisc：apt-get install -y psmisc）
-        fuser -k 443/tcp 2>/dev/null || true
+        fuser -k 8888/tcp 2>/dev/null || true
 
         # 启动（禁用重载，写 PID & 日志）
-        nohup ./.venv/bin/python manage.py runserver 0.0.0.0:443 --noreload --verbosity 2 > runserver.log 2>&1 &
+        nohup ./.venv/bin/python manage.py runserver 0.0.0.0:8888 --noreload --verbosity 2 > runserver.log 2>&1 &
         echo $! > runserver.pid
 
         # 健康检查（最多等 15 秒）
         for i in $(seq 1 30); do
-          if curl -sI --max-time 1 http://127.0.0.1:443/ >/dev/null; then
+          if curl -sI --max-time 1 http://127.0.0.1:8888/ >/dev/null; then
             echo "Service is UP."
             break
           fi
@@ -78,7 +78,7 @@ pipeline {
         done
 
         # 若仍然不通，则打印日志并失败
-        if ! curl -sI --max-time 1 http://127.0.0.1:443/ >/dev/null; then
+        if ! curl -sI --max-time 1 http://127.0.0.1:8888/ >/dev/null; then
           echo "Service failed to start. Last 200 lines of runserver.log:"
           tail -n 200 runserver.log || true
           exit 1
