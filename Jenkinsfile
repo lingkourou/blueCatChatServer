@@ -1,21 +1,15 @@
 pipeline {
-    agent any
-    triggers {
-        GenericTrigger(
-            genericVariables: [
-                [key: 'ref', value: '$.ref']
-            ],
-            token: 'YOUR_SECRET_TOKEN',
-            printContributedVariables: true,
-            printPostContent: true
-        )
+  agent any
+  options { timestamps(); ansiColor('xterm') }
+  triggers { githubPush() }   // ← 原生 GitHub 触发
+  stages {
+    stage('Checkout') {
+      steps {
+        checkout scm // 任务从SCM创建则可用；手写则用 GitSCM 同上
+      }
     }
-    stages {
-        stage('Log Webhook') {
-            steps {
-                echo "Received Webhook with ref: ${ref}"
-                sh 'curl -s http://localhost:8080/job/${JOB_NAME}/lastBuild/consoleText'
-            }
-        }
+    stage('Build') {
+      steps { sh 'echo build here' }
     }
+  }
 }
