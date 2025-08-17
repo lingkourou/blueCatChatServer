@@ -25,18 +25,17 @@ pipeline {
       }
     }
 
-//     stage('Migrate & Collectstatic') {
-//       steps {
-//         echo "=== 开始执行 migrate 和 collectstatic ==="
-//         sh '''
-//           set -eux
-//           . .venv/bin/activate
-//           python manage.py migrate --noinput
-//           python manage.py collectstatic --noinput
-//         '''
-//         echo "=== 数据库迁移和静态文件收集完成 ==="
-//       }
-//     }
+    stage('Migrate & Collectstatic') {
+      steps {
+        echo "=== 开始执行 migrate 和 collectstatic ==="
+        sh '''
+          set -eux
+          . .venv/bin/activate
+          python manage.py migrate --noinput
+        '''
+        echo "=== 数据库迁移和静态文件收集完成 ==="
+      }
+    }
 
     stage('Run Django Server') {
       steps {
