@@ -1,16 +1,22 @@
 pipeline {
   agent any
-  options { timestamps(); ansiColor('xterm') }
-  triggers { githubPush() }   // ← 原生 GitHub 触发
+  triggers { githubPush() }
   stages {
     stage('Checkout') {
       steps {
-        checkout scm // 任务从SCM创建则可用；手写则用 GitSCM 同上
+        checkout scm
       }
     }
-    stage('Build') {
-      steps { sh 'echo build here' }
+    stage('Run Django Server') {
+      steps {
+        sh '''
+          # 杀掉旧的 runserver（如果有）
+          pkill -f "manage.py runserver -8888" || true
+
+          # 启动新的 runserver 到后台
+          nohup python3 manage.py runserver 0.0.0.0:8888 > runserver.log 2>&1 &
+        '''
+      }
     }
   }
 }
-

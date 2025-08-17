@@ -10,3 +10,14 @@
 ```shell
 pip freeze > requirements.txt
 ```
+
+### 项目命令
+#### 创建项目
+```shell
+django-admin startproject cat_server ./
+```
+
+#### 运行命令
+```shell
+python manage.py runserver
+```
